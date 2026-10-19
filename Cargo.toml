@@ -16,3 +16,15 @@ codegen-units = 1
 # закрывается brotli-компрессией CDN).
 opt-level = "z"
 strip = true
+
+# Диск: debug-сборки Bevy/Rapier с полной debuginfo занимают ~8–10 ГБ
+# за проход и накапливаются в target/debug (T01–T06 накопили 18 ГБ).
+# line-tables-only оставляет бэктрейсы с файлами/строками, убирая
+# тяжёлые типы/инлайны — объём падает в разы.
+[profile.test]
+debug = "line-tables-only"
+
+# cargo test использует dev-профиль зависимостей, но свои бинарники
+# собирает по profile.test; dev остаётся дефолтным для cargo run/debug.
+[profile.dev]
+debug = "line-tables-only"
