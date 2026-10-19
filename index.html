@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Лифт Эйнштейна</title>
+  <!-- data-trunk обязателен: без него trunk 0.21 не копирует styles.css
+       в dist (проверено: plain <link rel="stylesheet"> игнорируется) -->
+  <link rel="stylesheet" href="./styles-8e9ec7352b569160.css" integrity="sha384-tnv7HkOHz0isgJPANY3EltzDp//rw+DCeOl15ftBV7nRlIWXyHgqAlQJ+mUsWAJ0"/>
+  <!-- data-wasm-opt: единственное место применения wasm-opt (T05 §4.3) -->
+  
+<script type="module">
+import init, * as bindings from './lift-app-c4f880bbfd9bfebb.js';
+const wasm = await init({ module_or_path: './lift-app-c4f880bbfd9bfebb_bg.wasm' });
+
+
+window.wasmBindings = bindings;
+
+
+dispatchEvent(new CustomEvent("TrunkApplicationStarted", {detail: {wasm}}));
+
+</script>
+<link rel="modulepreload" href="./lift-app-c4f880bbfd9bfebb.js" crossorigin="anonymous" integrity="sha384-z7YOvQm/DtIIQ3RQ2JUMuXgwp5Y8Noj3KXTXiU5gTYR9FNqNmcyqZgbc7WXdemO4"><link rel="preload" href="./lift-app-c4f880bbfd9bfebb_bg.wasm" crossorigin="anonymous" integrity="sha384-mUNpT+Ha8ekXhOqJ378DDgbYykCEdOXE61IvSZ0hgCSBPs7xglV11Qwy+R8WY1Ho" as="fetch" type="application/wasm"></head>
+<body>
+  <div id="hud">
+    <b>Лифт Эйнштейна</b>
+    <span>1–4 режимы · Shift+1–4 на лету · V кадр · L луч · C стереть · G ghost · , . скорость света · Space пауза/рестарт · R сброс</span>
+    <span>мышь — вращение, колесо/± — зум; стрелки — камера</span>
+  </div>
+</body>
+</html>
