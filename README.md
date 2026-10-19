@@ -1,6 +1,9 @@
 # Лифт Эйнштейна
 
 Интерактивное 3D-приложение (браузер, WASM) о **принципе эквивалентности** ОТО.
+
+Развернуто: https://dmicheev.github.io/General_relativity/
+
 Обзор проекта, контракты и порядок этапов: [overview.md](overview.md).
 Физическая спецификация: [00-physics-spec.md](00-physics-spec.md).
 
