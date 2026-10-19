@@ -1,0 +1,18 @@
+[workspace]
+resolver = "2"
+members = ["crates/lift-core", "crates/lift-app"]
+
+# T05 §4.2: lto/cg/strip — размер; выбор opt-level — см. комментарий ниже
+# и docs/baseline.md (сравнение 3 vs z). panic="abort" не включён: сохраняем дефолтный panic-хук
+# (console_error_panic_hook даёт файл и строку в консоли браузера).
+[profile.release]
+lto = "fat"
+codegen-units = 1
+# T05: выбран "z" после сравнения с 3 (docs/baseline.md):
+# raw −41%, gzip −35% (5.4 vs 8.3 МБ, бюджет 8). Hot path приложения —
+# рендер-команды gizmos и аналитика (не числодробитель); физика —
+# fixed-step. Пересмотреть, если браузерный прогон (T06/T07) покажет
+# < 50 FPS на 1080p — тогда вернуть 3 (gzip станет 8.3 МБ, бюджет
+# закрывается brotli-компрессией CDN).
+opt-level = "z"
+strip = true

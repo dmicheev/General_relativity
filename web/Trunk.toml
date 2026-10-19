@@ -1,0 +1,11 @@
+[build]
+target = "index.html"
+dist = "../dist"
+# Относительные пути ассетов: GitHub Pages отдаёт проект из
+# https://dmicheev.github.io/General_relativity/ (подпуть), абсолютные
+# /lift-app-*.js там не работают.
+public_url = "./"
+
+# T05 §4.3: уровень wasm-opt задаётся атрибутом data-wasm-opt
+# на <link data-trunk rel="rust"> в index.html (секция Trunk.toml
+# [wasm-opt] в 0.21 не читается — передавался голый "-O").

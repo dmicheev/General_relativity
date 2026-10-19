@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Лифт Эйнштейна</title>
+  <!-- data-trunk обязателен: без него trunk 0.21 не копирует styles.css
+       в dist (проверено: plain <link rel="stylesheet"> игнорируется) -->
+  <link data-trunk rel="css" href="styles.css" />
+  <!-- data-wasm-opt: единственное место применения wasm-opt (T05 §4.3) -->
+  <link data-trunk rel="rust" href="../crates/lift-app/Cargo.toml" data-bin="lift-app" data-wasm-opt="z" data-wasm-opt-params="--all-features" />
+</head>
+<body>
+  <div id="hud">
+    <b>Лифт Эйнштейна</b>
+    <span>1–4 режимы · Shift+1–4 на лету · V кадр · L луч · C стереть · G ghost · , . скорость света · Space пауза/рестарт · R сброс</span>
+    <span>мышь — вращение, колесо/± — зум; стрелки — камера</span>
+  </div>
+</body>
+</html>
