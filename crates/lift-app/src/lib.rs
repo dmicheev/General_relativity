@@ -24,6 +24,14 @@ pub fn app() {
             DefaultPlugins.set(WindowPlugin {
                 primary_window: Some(Window {
                     title: "Лифт Эйнштейна".into(),
+                    // WASM: canvas должен занимать всё окно и следить за
+                    // resize. Без этого bevy_winit фиксирует инлайн-стили
+                    // по размеру на момент старта (например 1280×720) и
+                    // больше не обновляет их — приложение рисует в
+                    // застрявший прямоугольник в углу страницы, остальное
+                    // пространство занимает фон body (#101018), и со
+                    // стороны выглядит как «ничего не отображается».
+                    fit_canvas_to_parent: true,
                     ..default()
                 }),
                 ..default()
@@ -100,6 +108,7 @@ pub fn app() {
                 systems::frame_bridge::update_frame_bridge.after(scene::update_orbit_camera),
                 systems::frame_bridge::sync_ball_visuals,
                 systems::frame_bridge::draw_trails,
+                systems::frame_bridge::draw_force_vectors,
                 scales::reading::read_contact_forces,
                 scales::update_scale_visuals.after(scales::reading::read_contact_forces),
                 light::draw_photon,

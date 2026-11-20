@@ -288,6 +288,7 @@ mod tests {
         let frame = FrameParams {
             external_g: 4.2,
             lift_a: -1.7,
+            ..Default::default()
         };
         let mut seed: u64 = 0x243F6A8885A308D3;
         for _ in 0..1000 {

@@ -124,7 +124,7 @@ pub fn sim_pre(
     custom: Res<CustomParams>,
     mut clock: ResMut<SimClock>,
     mut metrics: ResMut<Metrics>,
-    mut balls: Query<(&Ball, &mut Transform, &mut Velocity, &mut BallTrace)>,
+    mut balls: Query<(&Ball, &mut Transform, &mut Velocity, &mut ExternalForce, &mut BallTrace)>,
     mut ghost: Query<
         (&CabinGhost, &mut Transform, &mut Velocity, &mut ExternalForce),
         Without<Ball>,
@@ -155,13 +155,15 @@ pub fn sim_pre(
         Mode::Custom => FrameParams {
             external_g: custom.external_g,
             lift_a: custom.lift_a,
+            omega: custom.omega,
+            tidal_gradient: custom.tidal_gradient,
         },
         mode => mode.params(),
     };
     let frame = sim.frame;
 
     if need_reset {
-        for (ball, mut transform, mut velocity, mut trace) in &mut balls {
+        for (ball, mut transform, mut velocity, mut _force, mut trace) in &mut balls {
             transform.translation =
                 Vec3::new(BALL_X[ball.index] as f32, BALL_Y as f32, 0.0);
             transform.rotation = Quat::IDENTITY;
@@ -205,6 +207,31 @@ pub fn sim_pre(
     // Фантом кабины: g_eff + F/m = lift_a ⇒ F = lift_a − g_eff (масса 1 кг).
     if let Ok((_, _, _, mut force)) = ghost.single_mut() {
         force.force = Vec3::new(0.0, (frame.lift_a - frame.g_eff()) as f32, 0.0);
+    }
+
+    // Приливные + инерциальные силы на мячи (вне MVP: приливные + Кориолис).
+    // F = m · (a_tidal(pos) + a_cor(vel) + a_cf(pos)). Сила применяется на один
+    // фиксированный шаг Rapier (ExternalForce сбрасывается решателем).
+    for (ball, transform, velocity, mut external_force, _) in &mut balls {
+        let pos = [
+            transform.translation.x as f64,
+            transform.translation.y as f64,
+            transform.translation.z as f64,
+        ];
+        let vel = [
+            velocity.linear.x as f64,
+            velocity.linear.y as f64,
+            velocity.linear.z as f64,
+        ];
+        let a_tidal = frame.tidal_acceleration(pos);
+        let a_cor = frame.coriolis_acceleration(vel);
+        let a_cf = frame.centrifugal_acceleration(pos);
+        let m = BALL_MASS[ball.index] as f32;
+        external_force.force = Vec3::new(
+            (a_tidal[0] + a_cor[0] + a_cf[0]) as f32 * m,
+            (a_tidal[1] + a_cor[1] + a_cf[1]) as f32 * m,
+            (a_tidal[2] + a_cor[2] + a_cf[2]) as f32 * m,
+        );
     }
 
     ui_events.reset();

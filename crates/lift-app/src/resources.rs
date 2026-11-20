@@ -71,11 +71,16 @@ impl Default for SimConfig {
     }
 }
 
-/// Параметры режима `Custom` (UI-слайдеры появятся на этапе 6).
+/// Параметры режима `Custom` (UI-слайдеры appear на этапе 6).
+/// Поля `omega` и `tidal_gradient` — для приливных сил и вращения (вне MVP).
 #[derive(Resource)]
 pub struct CustomParams {
     pub external_g: f64,
     pub lift_a: f64,
+    /// Угловая скорость системы отсчёта, рад/с.
+    pub omega: [f64; 3],
+    /// Тензор градиента гравитационного поля ∂g_i/∂x_j, 1/(с²·м).
+    pub tidal_gradient: [[f64; 3]; 3],
 }
 
 impl Default for CustomParams {
@@ -83,6 +88,8 @@ impl Default for CustomParams {
         Self {
             external_g: 5.0,
             lift_a: 0.0,
+            omega: [0.0, 0.0, 0.0],
+            tidal_gradient: [[0.0; 3]; 3],
         }
     }
 }

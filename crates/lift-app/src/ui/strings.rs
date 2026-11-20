@@ -77,6 +77,17 @@ pub const LABEL_A_LIFT: &str = "a_lift";
 pub const LABEL_C_VIS: &str = "c_vis";
 pub const LABEL_DURATION: &str = "Длительность";
 
+pub const SECTION_TIDAL_TITLE: &str = "ПРИЛИВЫ / ВРАЩЕНИЕ (вне MVP)";
+pub const LABEL_OMEGA_X: &str = "ω_x (Кориолис)";
+pub const LABEL_OMEGA_Y: &str = "ω_y (Кориолис)";
+pub const LABEL_OMEGA_Z: &str = "ω_z (Кориолис)";
+pub const LABEL_TIDAL_XX: &str = "∂g_x/∂x (прилив)";
+pub const LABEL_TIDAL_YY: &str = "∂g_y/∂y (прилив)";
+pub const LABEL_TIDAL_ZZ: &str = "∂g_z/∂z (прилив)";
+pub const HINT_TIDAL_CORIOLIS: &str =
+    "Приливные: поле различается по высоте (тяжелее внизу). Кориолис: тело отклоняется \\
+     перпендикулярно скорости при вращении кабины. Ненулевые значения переключают режим в «Свой».";
+
 pub const PRESET_EARTH: &str = "Земля 9.81";
 pub const PRESET_MOON: &str = "Луна 1.62";
 pub const PRESET_MARS: &str = "Марс 3.71";

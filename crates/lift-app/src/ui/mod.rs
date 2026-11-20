@@ -290,10 +290,85 @@ fn left_panel(
         ] {
             if ui.small_button(label).clicked() {
                 custom.external_g = g;
+                custom.omega = [0.0, 0.0, 0.0];
+                custom.tidal_gradient = [[0.0; 3]; 3];
                 events.mode_live = Some(Mode::Custom);
             }
         }
     });
+    ui.separator();
+
+    // ---- Приливные силы и вращение (вне MVP) ----
+    ui.heading(s::SECTION_TIDAL_TITLE);
+    let mut advanced_moved = false;
+    // ω — все три компонента (вращение вокруг каждой из осей кабины).
+    if ui
+        .add(
+            egui::Slider::new(&mut custom.omega[0], -10.0..=10.0)
+                .step_by(0.1)
+                .text(s::LABEL_OMEGA_X),
+        )
+        .changed()
+    {
+        advanced_moved = true;
+    }
+    if ui
+        .add(
+            egui::Slider::new(&mut custom.omega[1], -10.0..=10.0)
+                .step_by(0.1)
+                .text(s::LABEL_OMEGA_Y),
+        )
+        .changed()
+    {
+        advanced_moved = true;
+    }
+    if ui
+        .add(
+            egui::Slider::new(&mut custom.omega[2], -10.0..=10.0)
+                .step_by(0.1)
+                .text(s::LABEL_OMEGA_Z),
+        )
+        .changed()
+    {
+        advanced_moved = true;
+    }
+    // Тензор приливного градиента — диагональные компоненты (XX, YY, ZZ).
+    if ui
+        .add(
+            egui::Slider::new(&mut custom.tidal_gradient[0][0], -2.0..=2.0)
+                .step_by(0.01)
+                .text(s::LABEL_TIDAL_XX),
+        )
+        .changed()
+    {
+        advanced_moved = true;
+    }
+    if ui
+        .add(
+            egui::Slider::new(&mut custom.tidal_gradient[1][1], -2.0..=2.0)
+                .step_by(0.01)
+                .text(s::LABEL_TIDAL_YY),
+        )
+        .changed()
+    {
+        advanced_moved = true;
+    }
+    if ui
+        .add(
+            egui::Slider::new(&mut custom.tidal_gradient[2][2], -2.0..=2.0)
+                .step_by(0.01)
+                .text(s::LABEL_TIDAL_ZZ),
+        )
+        .changed()
+    {
+        advanced_moved = true;
+    }
+    if advanced_moved {
+        events.mode_live = Some(Mode::Custom);
+    }
+    ui.label(egui::RichText::new(s::HINT_TIDAL_CORIOLIS).small());
+    ui.separator();
+
     // c_vis применяется мгновенно (аналитический пересчёт попадания).
     let c_vis_changed = ui
         .add(
@@ -615,7 +690,54 @@ fn status_block(
                 ui.end_row();
             }
         });
-    ui.add_space(4.0);
+
+    // Приливные силы / вращение: показываем только если ненулевые.
+    if sim.frame.omega != [0.0; 3]
+        || sim.frame.tidal_gradient != [[0.0; 3]; 3]
+    {
+        ui.add_space(2.0);
+        let mut advanced_rows: Vec<(&str, String, String)> = Vec::new();
+        for (label, value) in [
+            (s::LABEL_OMEGA_X, sim.frame.omega[0]),
+            (s::LABEL_OMEGA_Y, sim.frame.omega[1]),
+            (s::LABEL_OMEGA_Z, sim.frame.omega[2]),
+        ] {
+            if value != 0.0 {
+                advanced_rows.push((
+                    label,
+                    s::fmt_signed(value, 2),
+                    s::LABEL_UNIT_S.replace("с", "/с²"),
+                ));
+            }
+        }
+        for (label, value) in [
+            (s::LABEL_TIDAL_XX, sim.frame.tidal_gradient[0][0]),
+            (s::LABEL_TIDAL_YY, sim.frame.tidal_gradient[1][1]),
+            (s::LABEL_TIDAL_ZZ, sim.frame.tidal_gradient[2][2]),
+        ] {
+            if value != 0.0 {
+                advanced_rows.push((
+                    label,
+                    s::fmt_signed(value, 2),
+                    "1/(с²·м)".to_string(),
+                ));
+            }
+        }
+        if !advanced_rows.is_empty() {
+            egui::Grid::new("advanced_grid")
+                .num_columns(3)
+                .spacing([8.0, 1.0])
+                .show(ui, |ui| {
+                    for (label, value, unit) in &advanced_rows {
+                        ui.monospace(*label);
+                        ui.monospace(value);
+                        ui.label(egui::RichText::new(unit.as_str()).small());
+                        ui.end_row();
+                    }
+                });
+        }
+        ui.add_space(4.0);
+    }
 
     ui.strong(s::SECTION_SCALES);
     egui::Grid::new("scales_grid")

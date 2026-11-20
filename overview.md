@@ -35,7 +35,8 @@ p_external(t) = p_lift(t) + D(t),  D(t) = ½·a_lift·t².
 только после «Критериев приёмки»):
 00-physics-spec → 01-foundation (WASM-сцена) → 02-lift-physics (4 режима,
 2 кадра) → 03-scales → 04-light → 05-performance (размер бандла) →
-06-ui-pedagogy (предсказания) → 07-shaders-release (шейдеры, CI, деплой).
+06-ui-pedagogy (предсказания) → 07-shaders-release (шейдеры, CI, деплой) →
+08-tidal-coriolis (приливные силы + Кориолис, вне MVP).
 
 КОМАНДЫ:
 - cargo test -p lift-core        # тесты ядра нативно
@@ -161,6 +162,7 @@ pub struct ScaleReading {
 | 5 | `05-performance.md` | Измеренный и урезанный WASM-бандл |
 | 6 | `06-ui-pedagogy.md` | Учебный сценарий с предсказаниями |
 | 7 | `07-shaders-release.md` | Свечение, CI, деплой |
+| 8 | `08-tidal-coriolis.md` | Приливные силы + эффект Кориолиса (вне MVP) |
 
 **Правило:** этап не считается закрытым, пока не выполнены все пункты
 «Критерии приёмки» в его файле.
