@@ -10,8 +10,8 @@
   <!-- data-wasm-opt: единственное место применения wasm-opt (T05 §4.3) -->
   
 <script type="module">
-import init, * as bindings from './lift-app-c4f880bbfd9bfebb.js';
-const wasm = await init({ module_or_path: './lift-app-c4f880bbfd9bfebb_bg.wasm' });
+import init, * as bindings from './lift-app-2a5d4c38c586fe6e.js';
+const wasm = await init({ module_or_path: './lift-app-2a5d4c38c586fe6e_bg.wasm' });
 
 
 window.wasmBindings = bindings;
@@ -20,7 +20,7 @@ window.wasmBindings = bindings;
 dispatchEvent(new CustomEvent("TrunkApplicationStarted", {detail: {wasm}}));
 
 </script>
-<link rel="modulepreload" href="./lift-app-c4f880bbfd9bfebb.js" crossorigin="anonymous" integrity="sha384-z7YOvQm/DtIIQ3RQ2JUMuXgwp5Y8Noj3KXTXiU5gTYR9FNqNmcyqZgbc7WXdemO4"><link rel="preload" href="./lift-app-c4f880bbfd9bfebb_bg.wasm" crossorigin="anonymous" integrity="sha384-mUNpT+Ha8ekXhOqJ378DDgbYykCEdOXE61IvSZ0hgCSBPs7xglV11Qwy+R8WY1Ho" as="fetch" type="application/wasm"></head>
+<link rel="modulepreload" href="./lift-app-2a5d4c38c586fe6e.js" crossorigin="anonymous" integrity="sha384-Y2J7uWtx6xBid6lfcRG1rjbqi05/hqXc/yo4ajCDIg9H6VGFIPVf0jaq8M2S1/xk"><link rel="preload" href="./lift-app-2a5d4c38c586fe6e_bg.wasm" crossorigin="anonymous" integrity="sha384-ATKv18Gft3s2HYGFJAfi+jJSCt+U5Ngl4uZpn7iD6lDdbbLFgCSyAG5spG+L+mHe" as="fetch" type="application/wasm"></head>
 <body>
   <div id="hud">
     <b>Лифт Эйнштейна</b>
